@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
+      #canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+
+    <script>
+      var canvas = document.getElementById('canvas');
+      var context = canvas.getContext('2d');
+      var isDrawing = false;
+      var lastLineEnd = { x: 0, y: 0 };
+
+      resizeCanvas(); // Set initial size
+
+      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDrawing);
+      window.addEventListener('resize', resizeCanvas); // Resize canvas when window size changes
+
+      var lines = []; // Array to store lines
+      var lineSpacing = 20; // Minimum spacing between lines
+
+      function generateRandomLine() {
+        var canvasWidth = canvas.width;
+        var canvasHeight = canvas.height;
+
+        var lineLength = 100; // Set line length
+
+        // Generate random starting point
+        var startPoint = {
+          x: Math.random() * (canvasWidth - lineLength),
+          y: Math.random() * (canvasHeight - lineLength)
+        };
+
+        // Generate random direction vector
+        var angle = Math.random() * Math.PI * 2; // Angle between 0 and 2π
+        var direction = {
+          x: Math.cos(angle), // Convert angle to vector using trigonometry
+          y: Math.sin(angle)
+        };
+
+        // Calculate end point
+        var endPoint = {
+          x: startPoint.x + direction.x * lineLength,
+          y: startPoint.y + direction.y * lineLength
+        };
+
+        // Check if line goes outside the screen
+        if (
+          endPoint.x < 0 ||
+          endPoint.x > canvasWidth ||
+          endPoint.y < 0 ||
+          endPoint.y > canvasHeight
+        ) {
+          return; // Do not create lines that go outside the screen
+        }
+
+        // Check if line overlaps with existing lines and maintains minimum spacing
+        if (!isLineOverlapping(startPoint, endPoint) && isLineSpacingMaintained(startPoint, endPoint)) {
+          lines.push({ start: startPoint, end: endPoint });
+          drawLine(startPoint, endPoint);
+        } else {
+          generateRandomLine(); // Regenerate if line overlaps or does not maintain minimum spacing
+        }
+      }
+
+      function isLineOverlapping(start, end) {
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i];
+
+          // Calculate distance between lines
+          var distance = pointLineDistance(start, end, line.start, line.end);
+
+          // If distance is less than or equal to 0, lines are overlapping
+          if (distance <= 0) {
+            return true;
+          }
+        }
+        return false;
+      }
+
+      function isLineSpacingMaintained(start, end) {
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i];
+
+          // Calculate distance between lines
+          var distance = pointLineDistance(start, end, line.start, line.end);
+
+          // If minimum spacing is not maintained, return false
+          if (distance < lineSpacing) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      function pointLineDistance(start1, end1, start2, end2) {
+        var A = start1.y - end1.y;
+        var B = end1.x - start1.x;
+        var C = start1.x * end1.y - end1.x * start1.y;
+
+        var distance1 = (A * start2.x + B * start2.y + C) / Math.sqrt(A * A + B * B);
+        var distance2 = (A * end2.x + B * end2.y + C) / Math.sqrt(A * A + B * B);
+
+        if (distance1 * distance2 <= 0) {
+          return 0; // Lines are overlapping
+        }
+
+        return Math.min(Math.abs(distance1), Math.abs(distance2));
+      }
+
+      function drawLine(start, end) {
+        context.lineWidth = 2;
+        context.strokeStyle = 'black';
+
+        context.beginPath();
+        context.moveTo(start.x, start.y);
+        context.lineTo(end.x, end.y);
+        context.stroke();
+      }
+
+      // Generate 35 random lines as an example
+      for (var i = 0; i < 35; i++) {
+        generateRandomLine();
+      }
+
+      function startDrawing(e) {
+        isDrawing = true;
+        var x = e.clientX - canvas.offsetLeft;
+        var y = e.clientY - canvas.offsetTop;
+        lastLineEnd = { x: x, y: y };
+      }
+
+      function draw(e) {
+        if (!isDrawing) return;
+
+        var x = e.clientX - canvas.offsetLeft;
+        var y = e.clientY - canvas.offsetTop;
+
+        context.lineWidth = 2;
+        context.lineCap = 'round';
+        context.strokeStyle = 'black';
+
+        context.beginPath();
+        context.moveTo(lastLineEnd.x, lastLineEnd.y);
+        context.lineTo(x, y);
+        context.stroke();
+
+        lastLineEnd = { x: x, y: y };
+      }
+
+      function stopDrawing() {
+        isDrawing = false;
+      }
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+    </script>
+  </body>
+</html>

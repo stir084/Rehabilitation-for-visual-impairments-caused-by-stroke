@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            background-color: black;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .quadrant {
+            flex: 1 0 25%;
+        }
+
+        .white {
+            background-color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var quadrants = document.getElementsByClassName('quadrant');
+            var intervalId;
+
+            // When a quadrant is clicked, it toggles between white and black.
+            function handleQuadrantClick() {
+                this.classList.toggle('white');
+            }
+
+            // Since the entire screen starts as black, a random quadrant becomes white at regular intervals.
+            function startInterval() {
+                intervalId = setInterval(function() {
+                    var randomIndex = Math.floor(Math.random() * quadrants.length);
+                    quadrants[randomIndex].classList.add('white');
+                }, 2000);
+            }
+
+            // Add click event listeners to the quadrants.
+            for (var i = 0; i < quadrants.length; i++) {
+                quadrants[i].addEventListener('click', handleQuadrantClick);
+            }
+
+            // When a white quadrant is clicked, it becomes black again, and the interval restarts.
+            document.addEventListener('click', function(event) {
+                var clickedQuadrant = event.target.closest('.quadrant');
+                if (clickedQuadrant && clickedQuadrant.classList.contains('white')) {
+                    clickedQuadrant.classList.remove('white');
+                    clearInterval(intervalId);
+                    startInterval();
+                }
+            });
+
+            // Start the interval.
+            startInterval();
+        });
+    </script>
+</body>
+</html>
