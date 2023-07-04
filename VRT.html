@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            background-color: black;
+            overflow: hidden;
+        }
+
+        .white-dot {
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            position: absolute;
+            border-radius: 50%;
+            z-index: 9999;
+        }
+
+        .yellow-dot {
+            width: 20px;
+            height: 20px;
+            background-color: yellow;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div class="yellow-dot"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var intervalId;
+
+            // Create a white dot at a random position on the screen
+            function createWhiteDot() {
+                var dot = document.createElement('div');
+                dot.classList.add('white-dot');
+                dot.style.top = getRandomPosition(window.innerHeight) + 'px';
+                dot.style.left = getRandomPosition(window.innerWidth) + 'px';
+                document.body.appendChild(dot);
+            }
+
+            // Generate a random position within the given range
+            function getRandomPosition(max) {
+                return Math.floor(Math.random() * max);
+            }
+
+            // Create a white dot at regular intervals
+            function startInterval() {
+                intervalId = setInterval(function() {
+                    createWhiteDot();
+                }, 2000);
+            }
+
+            // When a white dot is clicked, it disappears
+            document.addEventListener('click', function(event) {
+                var clickedDot = event.target.closest('.white-dot');
+                if (clickedDot) {
+                    clickedDot.remove();
+                }
+            });
+
+            // Start the interval
+            startInterval();
+        });
+    </script>
+</body>
+</html>
