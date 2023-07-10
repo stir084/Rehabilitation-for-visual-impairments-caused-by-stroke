@@ -36,6 +36,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var intervalId;
+            var whiteDots = [];
+            var destroyedDots = [];
 
             // Create a white dot at a random position on the screen
             function createWhiteDot() {
@@ -44,6 +46,12 @@
                 dot.style.top = getRandomPosition(window.innerHeight) + 'px';
                 dot.style.left = getRandomPosition(window.innerWidth) + 'px';
                 document.body.appendChild(dot);
+                whiteDots.push(dot);
+
+                setTimeout(function () {
+                    removeWhiteDot(dot);
+                    checkCompletion();
+                }, 2000);
             }
 
             // Generate a random position within the given range
@@ -51,22 +59,50 @@
                 return Math.floor(Math.random() * max);
             }
 
-            // Create a white dot at regular intervals
-            function startInterval() {
-                intervalId = setInterval(function() {
-                    createWhiteDot();
-                }, 2000);
+            // Remove a white dot
+            function removeWhiteDot(dot) {
+                dot.remove();
+                var dotIndex = whiteDots.indexOf(dot);
+                if (dotIndex > -1) {
+                    whiteDots.splice(dotIndex, 1);
+                    destroyedDots.push(dot);
+                }
             }
 
-            // When a white dot is clicked, it disappears
-            document.addEventListener('click', function(event) {
-                var clickedDot = event.target.closest('.white-dot');
-                if (clickedDot) {
-                    clickedDot.remove();
+            // Check if the program completion condition is met
+            function checkCompletion() {
+                if (destroyedDots.length === 50) {
+                    showDestroyedDots();
+                    clearInterval(intervalId);
+                }
+            }
+
+            // Show the destroyed dots
+            function showDestroyedDots() {
+                for (var i = 0; i < destroyedDots.length; i++) {
+                    var dot = document.createElement('div');
+                    dot.classList.add('white-dot');
+                    dot.style.top = destroyedDots[i].style.top;
+                    dot.style.left = destroyedDots[i].style.left;
+                    document.body.appendChild(dot);
+                }
+            }
+
+            // When the document is clicked, remove a white dot
+            document.addEventListener('click', function (event) {
+                for (var i = 0; i < whiteDots.length; i++) {
+                    removeWhiteDot(whiteDots[i]);
                 }
             });
 
             // Start the interval
+            function startInterval() {
+                intervalId = setInterval(function () {
+                    createWhiteDot();
+                }, 2000);
+            }
+
+            // Start the program
             startInterval();
         });
     </script>
