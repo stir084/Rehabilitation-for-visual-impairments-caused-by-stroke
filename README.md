@@ -20,9 +20,12 @@ The project allows printing the test horizontally for offline use or drawing dir
 
 ![image](https://github.com/stir084/Rehabilitation-for-visual-impairments-caused-by-stroke/assets/47946124/c366e053-9913-4a5d-a85e-44e2e68109ce)
 
-[Go To The Page](https://stir084.github.io/Rehabilitation-for-visual-impairments-caused-by-stroke/VRT.html) - While focusing on the yellow dot, click on the white dot.   
+[Go To The Page](https://stir084.github.io/Rehabilitation-for-visual-impairments-caused-by-stroke/VRT.html)   
+While focusing on the yellow dot, click on the white dot.   
+If the white dots appear and are not clicked 50 times, it shows the result for the unclicked area.   
 
 ![image](https://github.com/stir084/Rehabilitation-for-visual-impairments-caused-by-stroke/assets/47946124/db440f48-7c97-42ed-a425-a554e22a5d5c)
+
 
 B project refers to Nova Vision's Vision Restoration Therapy (VRT) developed in the past to assist patients with homonymous hemianopsia. VRT is a rehabilitation program that has been criticized for the lack of clinical trials. However, I personally created this project because I believe it can provide the most visual stimulation during the period of neuroplasticity within three months after stroke. If the cost of VRT is burdensome, you can try this program.   
 
